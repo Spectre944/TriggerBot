@@ -44,6 +44,15 @@ class ThreadedCapture:
         except queue.Empty:
             return None, None
 
+    def read_latest(self):
+        """Неблокирующее чтение: самый свежий кадр или (None, None)."""
+        item = (None, None)
+        while True:
+            try:
+                item = self.queue.get_nowait()
+            except queue.Empty:
+                return item
+
     def stop(self):
         self._stop_event.set()
         if self._thread:
